@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_client_j_galaxy" default="compile.module.client_j_galaxy">
+  <dirname property="module.client_j_galaxy.basedir" file="${ant.file.module_client_j_galaxy}"/>
+  
+  <property name="module.jdk.home.client_j_galaxy" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.client_j_galaxy" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.client_j_galaxy" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.client_j_galaxy" value="-encoding UTF-8 -source 1.8 -target 8 ${compiler.args}"/>
+  
+  <property name="client_j_galaxy.output.dir" value="${module.client_j_galaxy.basedir}/out/production/client_j_galaxy"/>
+  <property name="client_j_galaxy.testoutput.dir" value="${module.client_j_galaxy.basedir}/out/test/client_j_galaxy"/>
+  
+  <path id="client_j_galaxy.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="client_j_galaxy.module.production.classpath">
+    <path refid="${module.jdk.classpath.client_j_galaxy}"/>
+  </path>
+  
+  <path id="client_j_galaxy.runtime.production.module.classpath">
+    <pathelement location="${client_j_galaxy.output.dir}"/>
+  </path>
+  
+  <path id="client_j_galaxy.module.classpath">
+    <path refid="${module.jdk.classpath.client_j_galaxy}"/>
+    <pathelement location="${client_j_galaxy.output.dir}"/>
+  </path>
+  
+  <path id="client_j_galaxy.runtime.module.classpath">
+    <pathelement location="${client_j_galaxy.testoutput.dir}"/>
+    <pathelement location="${client_j_galaxy.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.client_j_galaxy">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.client_j_galaxy">
+    <patternset refid="excluded.from.module.client_j_galaxy"/>
+  </patternset>
+  
+  <path id="client_j_galaxy.module.sourcepath">
+    <dirset dir="${module.client_j_galaxy.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.client_j_galaxy" depends="compile.module.client_j_galaxy.production,compile.module.client_j_galaxy.tests" description="Compile module client_j_galaxy"/>
+  
+  <target name="compile.module.client_j_galaxy.production" depends="register.custom.compilers" description="Compile module client_j_galaxy; production classes">
+    <mkdir dir="${client_j_galaxy.output.dir}"/>
+    <javac2 destdir="${client_j_galaxy.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.client_j_galaxy}/javac">
+      <compilerarg line="${compiler.args.client_j_galaxy}"/>
+      <bootclasspath refid="client_j_galaxy.module.bootclasspath"/>
+      <classpath refid="client_j_galaxy.module.production.classpath"/>
+      <src refid="client_j_galaxy.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.client_j_galaxy"/>
+    </javac2>
+    
+    <copy todir="${client_j_galaxy.output.dir}">
+      <fileset dir="${module.client_j_galaxy.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.client_j_galaxy.tests" depends="register.custom.compilers,compile.module.client_j_galaxy.production" description="compile module client_j_galaxy; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.client_j_galaxy" description="cleanup module">
+    <delete dir="${client_j_galaxy.output.dir}"/>
+    <delete dir="${client_j_galaxy.testoutput.dir}"/>
+  </target>
+</project>
